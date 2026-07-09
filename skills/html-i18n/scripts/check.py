@@ -6,7 +6,7 @@ html-i18n · check.py
 
 用法：
     python check.py <locales目录>
-    python check.py posthog版/locales
+    python check.py your-site/locales
 """
 import argparse
 import json

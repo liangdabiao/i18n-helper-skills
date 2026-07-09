@@ -81,7 +81,6 @@ WORD_MAP = {
     "线下": "線下",
     "数字": "數位",
     "数字化": "數位化",
-    "数字独立站": "數位獨立站",
     "电子商务": "電子商務",
     "电商": "電商",
     "营销": "行銷",
@@ -246,26 +245,8 @@ WORD_MAP = {
     "利润": "利潤",
     "净利润": "淨利潤",
     "销售额": "銷售額",
-    "GMV": "GMV",
-    "ROI": "ROI",
-    "PV": "PV",
-    "UV": "UV",
-    "DAU": "DAU",
-    "MAU": "MAU",
-    "WAU": "WAU",
-    "NPS": "NPS",
-    "LTV": "LTV",
-    "RFM": "RFM",
-    "CDP": "CDP",
-    "SDK": "SDK",
-    "API": "API",
-    "SQL": "SQL",
-    "Webhook": "Webhook",
-    "Docker": "Docker",
-    "PostHog": "PostHog",
-    "GA4": "GA4",
-    "Mixpanel": "Mixpanel",
-    "神策": "神策",
+    # 注：英文缩写（GMV/ROI/PV/UV/DAU/API/SDK 等）与产品名（PostHog/GA4 等）
+    # 简繁同形，无需列入本表。它们由 apply.py 的「与原文相同则保留」逻辑处理。
     "手册": "手冊",
     "实战": "實戰",
     "实战手册": "實戰手冊",
@@ -284,7 +265,6 @@ WORD_MAP = {
     "署名": "署名",
     "商业": "商業",
     "非商业": "非商業",
-    "标叔": "標叔",
 }
 
 # ── 字符级简→繁映射（覆盖常用差异字）──────────────────────────────
@@ -410,5 +390,5 @@ def to_traditional(text):
 
 if __name__ == "__main__":
     import sys
-    sample = sys.argv[1] if len(sys.argv) > 1 else "数据可视化与用户行为分析"
+    sample = sys.argv[1] if len(sys.argv) > 1 else "软件开发与网络应用"
     print(to_traditional(sample))

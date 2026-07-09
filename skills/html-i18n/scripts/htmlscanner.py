@@ -147,15 +147,37 @@ def scan(source):
     return sc.records
 
 
+# 常见 BCP47 语言代码（用于识别语言输出目录，避免写死具体语言）
+_LANG_CODES = {
+    "en", "en-us", "en-gb", "zh", "zh-cn", "zh-tw", "zh-hk", "ja", "ja-jp",
+    "ko", "ko-kr", "fr", "fr-fr", "de", "de-de", "es", "es-es", "it", "pt",
+    "pt-br", "ru", "ru-ru", "ar", "hi", "th", "vi", "tr", "nl", "pl", "sv",
+}
+_LANG_RE = re.compile(r"^[a-z]{2}(-[a-z]{2,4})?$")
+
+
+def is_lang_dir(name):
+    """判断目录名是否像语言输出目录（en / zh-TW / ja-JP 等）。"""
+    low = name.lower()
+    return low in _LANG_CODES or (bool(_LANG_RE.match(low)) and len(low) <= 5)
+
+
 def find_html_files(root):
-    """返回 [(绝对路径, 相对文件名)]，排除语言输出子目录与 locales 等。"""
-    EXCLUDE_DIRS = {"locales", "en", "zh-TW", "ja", "ja-JP", "node_modules",
-                    ".git", ".claude", ".agents", ".zcode", ".workbuddy",
-                    "图片和附件"}
+    """返回 [(绝对路径, 相对文件名)]，排除工具/输出子目录。
+
+    排除规则：
+    - 工具目录：locales / node_modules / .git / .claude / .agents / .zcode / .workbuddy
+    - 语言输出目录：名为常见 BCP47 语言代码的目录（en, zh-TW, ja, fr, de, ...），
+      通过 is_lang_dir() 判定，避免写死具体语言。
+    - 不排除图片等资源目录（它们不含 .html，自然不会被扫到）。
+    """
+    EXCLUDE_DIRS = {"locales", "node_modules", ".git", ".claude",
+                    ".agents", ".zcode", ".workbuddy", "vendor", "dist", "build"}
     out = []
     import os
     for dirpath, dirnames, filenames in os.walk(root):
-        dirnames[:] = [d for d in dirnames if d not in EXCLUDE_DIRS]
+        dirnames[:] = [d for d in dirnames
+                       if d not in EXCLUDE_DIRS and not is_lang_dir(d)]
         for fn in sorted(filenames):
             if fn.lower().endswith((".html", ".htm")):
                 rel = os.path.relpath(os.path.join(dirpath, fn), root).replace("\\", "/")

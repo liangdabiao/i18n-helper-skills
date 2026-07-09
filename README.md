@@ -37,7 +37,7 @@
 你的站点/
 ├─ index.html        (原版，保持不动)
 ├─ style.css         (多语言共享)
-├─ 图片和附件/       (多语言共享)
+├─ assets/           (图片等资源，多语言共享)
 ├─ locales/
 │  ├─ zh-CN.json     (翻译源)
 │  ├─ en-US.json     (英文译文)

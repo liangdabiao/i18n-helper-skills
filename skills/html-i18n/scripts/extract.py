@@ -15,7 +15,7 @@ html-i18n · extract.py
 
 用法：
     python extract.py <html根目录> [--out locales] [--common-min 2]
-    python extract.py posthog版/
+    python extract.py your-site/
 """
 import argparse
 import json

@@ -18,7 +18,7 @@ html-i18n · apply.py
 
 用法：
     python apply.py <html根目录> <语言json> <输出目录> [--lang en]
-    python apply.py posthog版/ posthog版/locales/en-US.json posthog版/en --lang en
+    python apply.py your-site/ your-site/locales/en-US.json your-site/en --lang en
 """
 import argparse
 import json
@@ -52,7 +52,7 @@ def apply_translations(source, records, text_map):
 
     定位策略：用「已占用区间」跟踪。每条 record 的 occurrence 是它在源文件中
     第几次出现；但 find_nth 做的是子串匹配，可能误命中更早出现的、属于别的文本
-    节点的子串（如 <title>「数字化独立站·...」会先于 <h1>「数字化独立站」被找到）。
+    节点的子串（如 <title>「站点名·...」会先于 <h1>「站点名」被找到）。
     因此：按文档顺序处理，若命中的区间已被占用，则递增 occurrence 重试，找到第一个
     空闲区间为止。这样既避免重叠替换产生乱码，又不会漏掉真正独立的文本节点。
     """
@@ -120,8 +120,9 @@ def set_lang_attr(html, lang):
 def link_shared_resources(html, depth):
     """子目录页面补 ../ 前缀，以共享根目录 css 与 图片。
 
-    depth: 子目录相对根的层数（posthog版/en → depth=1）。
-    只处理纯相对资源引用（style.css、图片和附件/），不改站内 .html 链接。
+    depth: 子目录相对根的层数（your-site/en → depth=1）。
+    只处理纯相对资源引用（style.css、assets/、images/ 等），不改站内 .html 链接
+    与绝对路径（http://、//、#、mailto: 等）。
     """
     if depth <= 0:
         return html
@@ -130,11 +131,13 @@ def link_shared_resources(html, depth):
     def fix_attr(match):
         attr = match.group(1)
         val = match.group(2)
+        # 跳过：绝对路径、锚点、协议链接、已是 ../ 开头、站内 .html 链接
+        if val.startswith(("../", "http://", "https://", "//", "#", "mailto:", "data:")):
+            return match.group(0)
         if re.match(r"^[A-Za-z0-9_\-]+\.html", val):
             return match.group(0)
-        if val.startswith(("style.css", "图片和附件/")):
-            return f'{attr}="{prefix}{val}"'
-        return match.group(0)
+        # 其余相对资源引用（css/js/图片/字体等）补前缀
+        return f'{attr}="{prefix}{val}"'
 
     return re.sub(r'(href|src)="([^"]+)"', fix_attr, html)
 
@@ -143,7 +146,7 @@ def main():
     ap = argparse.ArgumentParser(description="用翻译 JSON 生成目标语言 HTML 目录")
     ap.add_argument("root", help="源 HTML 根目录（中文原版）")
     ap.add_argument("json", help="翻译 JSON 路径（如 locales/en-US.json）")
-    ap.add_argument("outdir", help="输出目录（如 posthog版/en）")
+    ap.add_argument("outdir", help="输出目录（如 your-site/en）")
     ap.add_argument("--lang", default=None,
                     help="目标语言代码，写入 <html lang>（如 en / zh-TW / ja）。"
                          "默认取 json 文件名。")
