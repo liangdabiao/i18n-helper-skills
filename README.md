@@ -149,3 +149,11 @@ cp -r skills/i18n-helper 你的项目/.agents/skills/
 ## License
 
 MIT
+
+
+
+## 感谢
+
+- 参考skill: https://github.com/laolaoshiren/claude-code-skills-zh/blob/main/skills/i18n-helper/SKILL.md
+- Linux.do佬友支持: https://linux.do/
+
