@@ -1,23 +1,36 @@
 ---
 name: html-i18n
-description: 静态多页 HTML 站点的国际化/本地化 —— 扫描提取可翻译文本、生成各语言 HTML 目录、检查翻译完整性。用于书籍/文档站/官网落地页等多语言翻译，产出零 JS 依赖的纯静态译文站点。Use when user asks to translate a static HTML website, make HTML pages multilingual, or generate localized HTML.
+description: "纯静态 HTML 站点翻译 —— 只处理 .html/.css/图片构成的纯静态站点（书籍、文档站、博客、官网落地页），生成各语言独立 HTML 目录（en/、ja/ 等），不引入 JS、不改源码逻辑。判定信号：项目目录里只有 .html/.htm/.css + 图片资源，没有 .jsx/.ts/.tsx/.vue/.py/.php/.java 源码、没有 package.json/composer.json/框架文件。⚠️ 若项目是编程框架源码（React/Vue/Laravel/WordPress 等，需要在代码里写 t()/__() 翻译函数），改用 i18n-helper，本 skill 不适用。"
 ---
 
 # 🌐 html-i18n — 静态 HTML 站点多语言助手
 
 专注**静态多页 HTML 站点**的国际化翻译：书籍、文档站、博客、官网落地页等。
 采用「目录/路由方案」—— 每种语言一个独立目录，纯静态、SEO 友好、零 JS 依赖。
-与 `i18n-helper`（面向 React/Vue 等 JS 框架、依赖 `t()` 函数）**互补不重叠**。
+与 `i18n-helper`（面向 React/Vue/Laravel 等编程框架源码、依赖 `t()`/`__()` 函数）**互补不重叠**。
+
+## 该用哪个翻译 skill？（先判定再动手）
+
+**按项目目录里的文件类型判定**，不要只看用户怎么措辞：
+
+| 看到什么 | 用哪个 skill |
+|---------|------------|
+| 只有 `.html`/`.htm` + `.css` + 图片，无源码 | ✅ **html-i18n**（本 skill） |
+| 有 `package.json`/`composer.json` + `.js`/`.jsx`/`.vue`/`.php` 等源码 | ❌ 改用 `i18n-helper` |
+| React/Vue/Angular/Laravel/Symfony/WordPress 项目 | ❌ 改用 `i18n-helper` |
+| 用户说「在代码里加 `t()`/`__()` 翻译函数」 | ❌ 改用 `i18n-helper` |
+
+**本质区别**：本 skill 是「复制 HTML 并替换文本」产出静态目录；`i18n-helper` 是「改源码逻辑」产出翻译函数调用 + 语言配置文件。
 
 ## 触发条件
-当用户要求以下任一操作时激活：
+当用户要求以下任一操作，**且**目标是纯静态 HTML 站点时激活：
 - 翻译一个 HTML 网站 / 静态网页站点
 - 给这个网站/文档站做国际化、多语言
 - 把这套 HTML 书翻成英文/日文/繁中等
 - 生成网页的多语言版本（en/、ja/ 等语言目录）
 
 > 若项目是 React/Vue/Angular 等前端框架（含 .jsx/.tsx/.vue、用 `t()` 函数），
-> 改用 `i18n-helper`。本 skill 只处理**纯静态 HTML**（可含内联 CSS，但不应有构建框架）。
+> 或 PHP/Laravel/WordPress 等，改用 `i18n-helper`。本 skill 只处理**纯静态 HTML**（可含内联 CSS，但不应有构建框架）。
 
 ---
 

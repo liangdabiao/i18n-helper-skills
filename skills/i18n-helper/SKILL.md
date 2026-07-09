@@ -1,16 +1,36 @@
 ---
 name: i18n-helper
-description: 国际化/本地化助手 — 扫描代码中的硬编码文本、生成 i18n 配置、批量翻译
+description: "编程框架源码的国际化 —— 只处理需要写翻译函数的源码项目（React/Vue/Angular/i18next、Python、Java、Go、PHP 的 Laravel/Symfony/WordPress/原生 gettext），扫描 .js/.jsx/.ts/.tsx/.vue/.py/.java/.go/.php 等里的硬编码文本，生成 JSON/YAML/PO/XLIFF/PHP数组 语言文件，并把硬编码替换成 t()/__()/trans() 等翻译函数调用。判定信号：项目有源码文件或构建配置（package.json/composer.json/requirements.txt 等）。⚠️ 若目标是纯静态 HTML 站点（只有 .html/.css/图片，无源码、需要生成各语言 HTML 目录而非翻译函数），改用 html-i18n，本 skill 不适用。"
 ---
 
-# 🌍 i18n-helper — 国际化/本地化助手
+# 🌍 i18n-helper — 编程框架源码国际化助手
+
+处理**需要写翻译函数的源码项目**：React/Vue/Angular/i18next、Python、Java、Go、PHP（Laravel/Symfony/WordPress/原生 gettext）。
+把硬编码文本替换成 `t()`/`__()`/`trans()` 等翻译函数调用，生成 JSON/YAML/PO/XLIFF/PHP数组 语言文件。
+
+## 该用哪个翻译 skill？（先判定再动手）
+
+**按项目目录里的文件类型判定**，不要只看用户怎么措辞：
+
+| 看到什么 | 用哪个 skill |
+|---------|------------|
+| 有 `.js`/`.jsx`/`.ts`/`.tsx`/`.vue`/`.py`/`.php`/`.java`/`.go` 源码 | ✅ **i18n-helper**（本 skill） |
+| 有 `package.json`/`composer.json`/`requirements.txt` 等构建配置 | ✅ **i18n-helper**（本 skill） |
+| React/Vue/Angular/Laravel/Symfony/WordPress 项目 | ✅ **i18n-helper**（本 skill） |
+| 只有 `.html`/`.htm` + `.css` + 图片，无源码 | ❌ 改用 `html-i18n` |
+
+**本质区别**：本 skill 是「改源码逻辑」产出翻译函数调用 + 语言配置文件；`html-i18n` 是「复制 HTML 并替换文本」产出静态目录。
 
 ## 触发条件
-当用户要求以下操作时激活此技能：
-- 扫描代码中的硬编码中文/英文文本
+当用户要求以下操作，**且**目标是编程框架源码项目时激活：
+- 扫描源码中的硬编码中文/英文文本
 - 为项目添加国际化支持（i18n）
-- 批量提取和翻译语言文件
+- 批量提取和翻译语言文件（JSON/YAML/PO/XLIFF）
 - 检查翻译完整性（缺失 key 检测）
+- 在代码里加 `t()`/`__()`/`trans()` 翻译函数
+
+> 若目标是纯静态 HTML 站点（只有 .html/.css/图片、无源码、需要生成各语言 HTML 目录），
+> 改用 `html-i18n`，本 skill 不适用。
 
 ## 工作流程
 
